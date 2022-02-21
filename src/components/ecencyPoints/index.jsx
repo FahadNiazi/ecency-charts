@@ -33,7 +33,7 @@ const useStyles = makeStyles({
     alignItems: "center",
   },
 });
-export const EcencyPoints = ({ image, amount, point, name, color, icon }) => {
+export const EcencyPoints = ({ image, amount, point, name }) => {
   const classes = useStyles();
   return (
     <Box className={classes.container}>

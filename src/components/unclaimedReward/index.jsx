@@ -3,8 +3,8 @@ import infoBlack from "../../assets/infoBlack.png";
 import SearchSharpIcon from "@material-ui/icons/SearchSharp";
 import KeyboardArrowDownSharpIcon from "@material-ui/icons/KeyboardArrowDownSharp";
 import MenuIcon from "@material-ui/icons/Menu";
-import zigzag from "../../assets/zigzag.png";
-import React from "react";
+import zigzag from "../../assets/zigzag.svg";
+import React, { useState } from "react";
 
 const useStyles = makeStyles({
   container: {
@@ -128,7 +128,9 @@ const useStyles = makeStyles({
     marginLeft: 15,
   },
 });
-export const UnclaimedReward = () => {
+
+export const UnclaimedReward = ({ onOptionClick: setShowList }) => {
+  const [active, setActive] = useState("chart");
   const classes = useStyles();
   return (
     <Box>
@@ -158,12 +160,30 @@ export const UnclaimedReward = () => {
         </Box>
         <Box className={classes.menuIcon}>
           <Box>
-            <Button className={classes.zigzagButton}>
+            <Button
+              onClick={() => {
+                setActive("chart");
+                setShowList(false);
+              }}
+              style={{
+                backgroundColor: active === "chart" ? "black" : "white",
+              }}
+              className={classes.zigzagButton}
+            >
               <img className={classes.zigzagIcon} src={zigzag} alt="" />
             </Button>
           </Box>
           <Box>
-            <Button className={classes.menuButton}>
+            <Button
+              className={classes.menuButton}
+              onClick={() => {
+                setActive("list");
+                setShowList(true);
+              }}
+              style={{
+                backgroundColor: active === "list" ? "black" : "white",
+              }}
+            >
               <MenuIcon />
             </Button>
           </Box>

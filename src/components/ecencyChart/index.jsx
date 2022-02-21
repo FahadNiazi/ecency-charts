@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import { data } from "./data";
@@ -125,120 +125,101 @@ const ecencyMap = [
     arrow: "#EB5757",
   },
 ];
-export default class EcencyChart extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      // To avoid unnecessary update keep all options in the state.
-      chartOptions: {
-        chart: {
-          zoomType: "x",
-          background: "linear-gradient( #357CE6, #97C1FF)",
-          backgroundColor: "transparent",
+const EcencyChart = () => {
+  let inititalChartOptions = {
+    // To avoid unnecessary update keep all options in the state.
+    chartOptions: {
+      chart: {
+        zoomType: "x",
+        background: "linear-gradient( #357CE6, #97C1FF)",
+        backgroundColor: "transparent",
 
-          height: "15%",
-        },
-        title: {
-          title: "",
-          style: { display: "none" },
-        },
+        height: "15%",
+      },
+      title: {
+        title: "",
+        style: { display: "none" },
+      },
 
-        yAxis: {
-          startOnTick: false,
-          endOnTick: false,
-          tickPositions: [],
-          title: "",
-          style: {
-            display: "none",
-          },
+      yAxis: {
+        startOnTick: false,
+        endOnTick: false,
+        tickPositions: [],
+        title: "",
+        style: {
+          display: "none",
         },
-        xAxis: {
-          startOnTick: false,
-          endOnTick: false,
-          lineColor: "#99BFF4",
-          tickPositions: [],
-          title: "",
-          style: {
-            display: "none",
-          },
+      },
+      xAxis: {
+        startOnTick: false,
+        endOnTick: false,
+        lineColor: "#99BFF4",
+        tickPositions: [],
+        title: "",
+        style: {
+          display: "none",
         },
-        credits: {
-          enabled: false,
-        },
+      },
+      credits: {
+        enabled: false,
+      },
 
-        legend: {
-          enabled: false,
-        },
-        plotOptions: {
-          area: {
-            fillColor: {
-              linearGradient: {
-                x1: 0,
-                y1: 0,
-                x2: 0,
-                y2: 1,
-              },
-              stops: [
-                [0, Highcharts.getOptions().colors[0]],
-                [
-                  1,
-                  Highcharts.color(Highcharts.getOptions().colors[0])
-                    .setOpacity(0)
-                    .get("rgba"),
-                ],
+      legend: {
+        enabled: false,
+      },
+      plotOptions: {
+        area: {
+          fillColor: {
+            linearGradient: {
+              x1: 0,
+              y1: 0,
+              x2: 0,
+              y2: 1,
+            },
+            stops: [
+              [0, Highcharts.getOptions().colors[0]],
+              [
+                1,
+                Highcharts.color(Highcharts.getOptions().colors[0])
+                  .setOpacity(0)
+                  .get("rgba"),
               ],
-            },
-            marker: {
-              radius: 2,
-            },
-            lineWidth: 1,
-            states: {
-              hover: {
-                lineWidth: 1,
-              },
-            },
-            threshold: null,
+            ],
           },
+          marker: {
+            radius: 2,
+          },
+          lineWidth: 1,
+          states: {
+            hover: {
+              lineWidth: 1,
+            },
+          },
+          threshold: null,
         },
-
-        series: [
-          {
-            type: "area",
-            name: "USD to EUR",
-            data: data,
-          },
-        ],
       },
-      hoverData: null,
-    };
-  }
 
-  setHoverData = (e) => {
-    // The chart is not updated because `chartOptions` has not changed.
-    this.setState({ hoverData: e.target.category });
+      series: [
+        {
+          type: "area",
+          name: "USD to EUR",
+          data: data,
+        },
+      ],
+    },
+    hoverData: null,
   };
+  const [showList, setShowList] = useState(false);
+  return (
+    <div>
+      <Grid container>
+        <Grid item lg={3}></Grid>
+        <Grid item lg={6}>
+          <UnclaimedReward onOptionClick={setShowList} />
 
-  updateSeries = () => {
-    // The chart is updated only with new options.
-    this.setState({
-      chartOptions: {
-        series: [{ data: [Math.random() * 5, 2, 1] }],
-      },
-    });
-  };
-
-  render() {
-    const { chartOptions } = this.state;
-
-    return (
-      <div>
-        <Grid container>
-          <Grid item lg={3}></Grid>
-          <Grid item lg={6}>
-            <UnclaimedReward />
-
-            {ecencyMap.map((item) => (
+          {!showList &&
+            ecencyMap.map((item) => (
               <Box style={styles.container}>
                 <ValueBar
                   image={item.image}
@@ -251,7 +232,7 @@ export default class EcencyChart extends Component {
                 />
                 <HighchartsReact
                   highcharts={Highcharts}
-                  options={chartOptions}
+                  options={inititalChartOptions.chartOptions}
                 />
                 <AmountBar
                   amount={item.amount}
@@ -262,7 +243,8 @@ export default class EcencyChart extends Component {
                 />
               </Box>
             ))}
-            {ecencyPoints.map((item) => (
+          {showList &&
+            ecencyPoints.map((item) => (
               <EcencyPoints
                 image={item.image}
                 name={item.name}
@@ -271,15 +253,16 @@ export default class EcencyChart extends Component {
                 backgroundColor={item.backgroundColor}
               />
             ))}
-            <Box>
-              <Box style={styles.backgroundColor}>
-                <Button style={styles.addButton}>Add More</Button>
-              </Box>
+          <Box>
+            <Box style={styles.backgroundColor}>
+              <Button style={styles.addButton}>Add More</Button>
             </Box>
-          </Grid>
-          <Grid item lg={3}></Grid>
+          </Box>
         </Grid>
-      </div>
-    );
-  }
-}
+        <Grid item lg={3}></Grid>
+      </Grid>
+    </div>
+  );
+};
+
+export default EcencyChart;
